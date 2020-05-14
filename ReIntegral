@@ -1,0 +1,44 @@
+using System;
+
+namespace ReIntegralOfOneValue
+{
+    class MainClass
+    {
+        public static void Main(string[] args)
+        {
+            _ = new ReIntegral();
+        }
+    }
+    class Variables
+    {
+        public double da, x, y, fx, cos1, sin1,cos2,sin2, inte1,inte2;
+    }
+    class ReIntegral:Variables
+    {
+        public ReIntegral()
+        {
+            da = 1.0e-8;
+            for (x = Math.PI/8.0; x < Math.PI/4.0;)
+            {
+                inte1 = 0.0;
+                for (y = 0.0; y < Math.Cos(x);)
+                {
+                    fx = Function(y);
+                    cos1 = Math.Sqrt(1.0 / (1.0 + fx * fx));
+                    sin1 = fx * Math.Sqrt(1.0 / (1.0 + fx * fx));
+                    y += da * cos1;
+                    inte1 += da * sin1;
+                }
+                cos2 = Math.Sqrt(1.0 / (1.0 + inte1 * inte1));
+                sin2 = inte1 * Math.Sqrt(1.0 / (1.0 + inte1 * inte1));
+                x += da * cos2;
+                inte2 += da * sin2;
+                Console.Write("x:{0} y:{1} fx:{2} integral1:{3} integral2:{4}\n", x, y, fx, inte1, inte2);
+            }
+        }
+        public double Function(double x)
+        {
+            return Math.Sin(Math.Sin(x));
+        }
+    }
+}
