@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace ReIntegralOfOneValue
+{
+    class MainClass
+    {
+        public static void Main(string[] args)
+        {
+            _ = new MultiIntegral();
+        }
+    }
+    class Variables
+    {
+        public double da,da2, x, y,pre, f,fx11,fx12,fx13,fx2, cos11, sin11,cos12,cos13,sin12,sin13,cos21,cos22,sin21,sin22, inte1,inte12,inte2,inte,preinte;
+        public List<double> fx = new List<double>();
+        public List<double> sin = new List<double>();
+        public List<double> cos = new List<double>();
+    }
+    class MultiIntegral : Variables
+    {
+
+        public MultiIntegral()
+        {
+
+            da = 1.0e-04;
+            da2 = 1.0e-04;
+            for (x = 0.0; x < 1.0;)
+            {
+                inte1 = 0.0;
+                for (y = 0.0; y <= x-da;)
+                {
+                    fx11 = Function(y+da*COS(Math.Acos(cos11)+da*Math.Asin(sin11))/2.0);
+                    cos11 = Math.Sqrt(1.0 / (1.0 + fx11 * fx11));
+                    sin11 = fx11 * Math.Sqrt(1.0 / (1.0 + fx11 * fx11));
+                    y += da * cos11;
+                    inte1 += da * SIN(Math.Asin(sin11) + da * Math.Acos(cos11)/2.0);
+                }
+                fx2 = inte1;
+                cos21 = Math.Sqrt(1.0 / (1.0 + fx2 * fx2));
+                sin21 = fx2 * Math.Sqrt(1.0 / (1.0 + fx2 * fx2));
+                x += da2 * cos21;
+                inte2 += da2 * sin21;
+
+                //Console.Write("x:{0} y:{1} integral1:{2} integral2:{3} {4} {5}\n", x, y, inte1, inte2, inte1 - x * x * x / 3, inte2 - x * x * x * x / 12);
+                Console.Write("x:{0} y:{1} integral1:{2} integral2:{3} {4} {5}\n", x, y, inte1, inte2, inte1 - Function(y) + 1, inte2 + x - Function(x) + 1);
+            }
+        }
+        public double Function(double x)
+        {
+            //return Math.Sin(Math.Sin(x));
+            return Math.Exp(x);
+            //return x * x;
+        }
+        public double SIN(double x)
+        {
+            double sign=1.0;
+            double factorial;
+            double X = 1.0;
+            double answer = 0.0;
+            for(int i = 0; i < 15; i++)
+            {
+                sign = Math.Pow(-1.0, i);
+                X = Math.Pow(x, 2 * i + 1);
+                factorial = 1.0;
+                for(int j = 1; j <= 2*i+1; j++)
+                {
+                    factorial *=(double)j;
+                }
+                answer += sign * X / factorial;
+            }
+            return answer;
+        }
+        public double COS(double x)
+        {
+            double sign = 1.0;
+            double factorial;
+            double X = 1.0; ;
+            double answer = 0.0;
+            for(int i = 0; i < 15; i++)
+            {
+                sign = Math.Pow(-1.0, i);
+                X = Math.Pow(x, 2 * i);
+                factorial = 1.0;
+                for(int j = 1; j <= 2 * i; j++)
+                {
+                    factorial *= (double)j;
+                }
+                answer += sign * X / factorial;
+            }
+            return answer;
+        }
+    }
+}
